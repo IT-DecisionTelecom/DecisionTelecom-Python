@@ -1,11 +1,11 @@
 import json
-from types import SimpleNamespace
 import requests
 import enum
 import re
 
 
 class SmsMessageStatus(enum.Enum):
+    """Represents SMS message status"""
     Unknown = 0
     Delivered = 2
     Expired = 3
@@ -14,6 +14,7 @@ class SmsMessageStatus(enum.Enum):
 
 
 class SmsErrorCode(enum.Enum):
+    """Represents SMS error code"""
     InvalidNumber = 40
     IncorrectSender = 41
     InvalidMessageId = 42
@@ -29,20 +30,41 @@ class SmsErrorCode(enum.Enum):
 
 
 class SmsError(Exception):
+    """Represens SMS error
+
+    Attributes:
+        error_code (SmsErrorCode): SMS error code
+
+    """
+
     def __init__(self, error_code) -> None:
+        """Creates new instance of the SmsError class
+
+        Args:
+            error_code (SmsErrorCode): SMS error code
+        """
         super().__init__()
         self.error_code = error_code
 
 
 class SmsBalance:
+    """Represents user money balance"""
+
     def __init__(self, balance, credit, currency) -> None:
+        """Creates new instance of the SmsBalance class
+
+        Args:
+            balance (float): Current balance amount
+            credit (float): Current credit line (if opened)
+            currency (string): Balance currency
+        """
         self.balance = balance
         self.credit = credit
         self.currency = currency
 
 
 class SmsClient:
-    """Client to work with SMS messages"""    
+    """Client to work with SMS messages"""
     BASE_URL = "https://web.it-decision.com/ru/js"
 
     def __init__(self, login, password) -> None:
