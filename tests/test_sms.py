@@ -1,4 +1,3 @@
-from locale import currency
 import unittest
 import responses
 from decisiontelecom.sms import SmsClient, SmsError, SmsErrorCode, SmsMessageStatus
@@ -25,7 +24,7 @@ class TestSms(unittest.TestCase):
         self.assertEquals(expected_message_id, message_id)
 
     @responses.activate
-    def test_send_message_returns_decision_telecom_error(self):
+    def test_send_message_returns_error_code(self):
         expected_error_code = SmsErrorCode.InvalidLoginOrPassword
 
         responses.add(responses.GET,
@@ -42,17 +41,34 @@ class TestSms(unittest.TestCase):
             self.assertEquals(expected_error_code, error.error_code)
 
     @responses.activate
-    def test_send_message_returns_general_error(self):
+    def test_send_message_returns_unsuccessful_status_code(self):
+        expected_error_message = "Unsuccessful request, response status code: 500"
         responses.add(responses.GET,
                       "https://web.it-decision.com/ru/js/send",
                       body="Some general error text",
-                      status=404,
+                      status=500,
                       match_querystring=False)
 
         try:
             self.sms_client.send_message('', '', '', True)
         except Exception as error:
             self.assertFalse(isinstance(error, SmsError))
+            self.assertEquals(expected_error_message, error.args[0])
+
+    @responses.activate
+    def test_send_message_returns_invalid_response(self):
+        expected_error_message = "Invalid response: unknown key 'message_id'"
+        responses.add(responses.GET,
+                      "https://web.it-decision.com/ru/js/send",
+                      body="[\"message_id\",\"12345\"]",
+                      status=200,
+                      match_querystring=False)
+
+        try:
+            self.sms_client.send_message('', '', '', True)
+        except Exception as error:
+            self.assertFalse(isinstance(error, SmsError))
+            self.assertEquals(expected_error_message, error.args[0])
 
     @responses.activate
     def test_get_message_status_returns_status(self):
@@ -84,7 +100,7 @@ class TestSms(unittest.TestCase):
         self.assertEquals(expected_status, status)
 
     @responses.activate
-    def test_get_message_status_returns_decision_telecom_error(self):
+    def test_get_message_status_returns_error_code(self):
         expected_error_code = SmsErrorCode.InvalidLoginOrPassword
 
         responses.add(responses.GET,
@@ -101,17 +117,34 @@ class TestSms(unittest.TestCase):
             self.assertEquals(expected_error_code, error.error_code)
 
     @responses.activate
-    def test_get_message_status_returns_general_error(self):
+    def test_get_message_status_returns_unsuccessful_status_code(self):
+        expected_error_message = "Unsuccessful request, response status code: 500"
         responses.add(responses.GET,
                       "https://web.it-decision.com/ru/js/state",
                       body="Some general error text",
-                      status=404,
+                      status=500,
                       match_querystring=False)
 
         try:
-            self.sms_client.get_message_status(123)
+            self.sms_client.get_message_status(124)
         except Exception as error:
             self.assertFalse(isinstance(error, SmsError))
+            self.assertEquals(expected_error_message, error.args[0])
+
+    @responses.activate
+    def test_get_message_status_returns_invalid_response(self):
+        expected_error_message = "Invalid response: unknown key 'stat'"
+        responses.add(responses.GET,
+                      "https://web.it-decision.com/ru/js/state",
+                      body="[\"stat\",\"12345\"]",
+                      status=200,
+                      match_querystring=False)
+
+        try:
+            self.sms_client.get_message_status(124)
+        except Exception as error:
+            self.assertFalse(isinstance(error, SmsError))
+            self.assertEquals(expected_error_message, error.args[0])
 
     @responses.activate
     def test_get_balance_returns_balance_information(self):
@@ -135,7 +168,7 @@ class TestSms(unittest.TestCase):
         self.assertEquals(expected_currency, balance.currency)
 
     @responses.activate
-    def test_get_balance_returns_decision_telecom_error(self):
+    def test_get_balance_returns_error_code(self):
         expected_error_code = SmsErrorCode.InvalidLoginOrPassword
 
         responses.add(responses.GET,
@@ -152,11 +185,28 @@ class TestSms(unittest.TestCase):
             self.assertEquals(expected_error_code, error.error_code)
 
     @responses.activate
-    def test_get_balance_returns_general_error(self):
+    def test_get_balance_returns_unsuccessful_status_code(self):
+        expected_error_message = "Unsuccessful request, response status code: 500"
         responses.add(responses.GET,
                       "https://web.it-decision.com/ru/js/balance",
                       body="Some general error text",
-                      status=404,
+                      status=500,
+                      match_querystring=False)
+
+        try:
+            self.sms_client.get_balance()
+        except Exception as error:
+            self.assertFalse(isinstance(error, SmsError))
+            self.assertEquals(expected_error_message, error.args[0])
+
+    @responses.activate
+    def test_get_balance_returns_incorrect_json(self):
+        responses.add(responses.GET,
+                      "https://web.it-decision.com/ru/js/balance",
+                      body="[\"bal\":\"{balance}\",\"credit\":\"{credit}\",\"currency\":\"{currency}\"]".format(
+                          balance=100, credit=200, currency="EUR"
+                      ),
+                      status=200,
                       match_querystring=False)
 
         try:

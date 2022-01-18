@@ -34,7 +34,7 @@ def sms_get_message_status():
         print("Message status: %d (%s)" % (status.value, status))
     except SmsError as sms_error:
         # sms_error contains specific DecisionTelecom error with the code of what went wrong during the operation
-        print("Error while sending SMS message. Error code: %d (%s)" % (sms_error.error_code.value, sms_error.error_code))
+        print("Error while getting SMS message status. Error code: %d (%s)" % (sms_error.error_code.value, sms_error.error_code))
     except Exception as error:
         # A non-DecisionTelecom error occurred during the operation (like connection error)
         print(error)
@@ -51,12 +51,12 @@ def sms_get_balance():
         print("Balance: %f, Credit: %f, Currency: %s" % (balance.balance, balance.credit, balance.currency))
     except SmsError as sms_error:
         # sms_error contains specific DecisionTelecom error with the code of what went wrong during the operation
-        print("Error while sending SMS message. Error code: %d (%s)" % (sms_error.error_code.value, sms_error.error_code))
+        print("Error while getting balance information. Error code: %d (%s)" % (sms_error.error_code.value, sms_error.error_code))
     except Exception as error:
         # A non-DecisionTelecom error occurred during the operation (like connection error)
         print(error)
 
 if __name__ == "__main__":
-    #sms_send_message()
-    #sms_get_message_status()
+    sms_send_message()
+    sms_get_message_status()
     sms_get_balance()

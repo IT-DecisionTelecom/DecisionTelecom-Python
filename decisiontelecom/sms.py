@@ -93,11 +93,11 @@ class SmsClient:
             SmsError: If specific SMS error occurred
         """
         def ok_response_func(response_body) -> int:
-            return int(get_value_from_response_content(response_body, "msgid"))
+            return int(self.__get_value_from_response_content(response_body, "msgid"))
 
         url = "{base_url}/send?login={login}&password={password}&phone={receiver}&sender={sender}&text={text}&dlr={dlr}".format(
             base_url=self.BASE_URL, login=self.login, password=self.password, receiver=receiver, sender=sender, text=text, dlr=int(delivery))
-        return make_http_request(url, ok_response_func)
+        return self.__make_http_request(url, ok_response_func)
 
     def get_message_status(self, message_id) -> SmsMessageStatus:
         """Returns SMS message delivery status
@@ -112,13 +112,13 @@ class SmsClient:
             SmsError: If specific SMS error occurred
         """
         def ok_response_func(response_body):
-            response_value = get_value_from_response_content(
+            response_value = self.__get_value_from_response_content(
                 response_body, "status")
             return SmsMessageStatus.Unknown if response_value == "" else SmsMessageStatus(int(response_value))
 
         url = "{base_url}/state?login={login}&password={password}&msgid={message_id}".format(
             base_url=self.BASE_URL, login=self.login, password=self.password, message_id=message_id)
-        return make_http_request(url, ok_response_func)
+        return self.__make_http_request(url, ok_response_func)
 
     def get_balance(self) -> SmsBalance:
         """Returns SMS balance information
@@ -139,27 +139,29 @@ class SmsClient:
 
         url = "{base_url}/balance?login={login}&password={password}".format(
             base_url=self.BASE_URL, login=self.login, password=self.password)
-        return make_http_request(url, ok_response_func)
+        return self.__make_http_request(url, ok_response_func)
 
+    def __get_value_from_response_content(self, response_content, key_property_name):
+        split = response_content.replace("[", "").replace("]", "").split(",")
+        result = list(map(lambda s: s.strip("\""), split))
 
-def get_value_from_response_content(response_content, key_property_name):
-    split = response_content.replace("[", "").replace("]", "").split(",")
-    result = list(map(lambda s: s.strip("\""), split))
+        if result[0] != key_property_name:
+            raise Exception(
+                "Invalid response: unknown key '{key}'".format(key=result[0]))
 
-    if result[0] != key_property_name:
-        raise Exception(
-            "Invalid response: unknown key '{key}'".format(key=result[0]))
+        return result[1]
 
-    return result[1]
+    def __make_http_request(self, url, ok_response_func):
+        response = requests.get(url)
+        response_body = response.text
 
+        if response.status_code < 200 or response.status_code >= 300:
+            raise Exception("Unsuccessful request, response status code: {status_code}".format(
+                status_code=response.status_code))
 
-def make_http_request(url, ok_response_func):
-    response = requests.get(url)
-    response_body = response.text
+        if response_body.startswith("[\"error"):
+            error_code = int(self.__get_value_from_response_content(
+                response_body, "error"))
+            raise SmsError(SmsErrorCode(error_code))
 
-    if response_body.startswith("[\"error"):
-        error_code = int(get_value_from_response_content(
-            response_body, "error"))
-        raise SmsError(SmsErrorCode(error_code))
-
-    return ok_response_func(response_body)
+        return ok_response_func(response_body)
