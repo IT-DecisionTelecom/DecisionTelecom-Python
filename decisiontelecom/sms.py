@@ -38,7 +38,7 @@ class SmsError(Exception):
     """
 
     def __init__(self, error_code) -> None:
-        """Creates new instance of the SmsError class
+        """Initializes SmsError object
 
         Args:
             error_code (SmsErrorCode): SMS error code
@@ -51,7 +51,7 @@ class SmsBalance:
     """Represents user money balance"""
 
     def __init__(self, balance, credit, currency) -> None:
-        """Creates new instance of the SmsBalance class
+        """Initializes SmsBalance object
 
         Args:
             balance (float): Current balance amount
@@ -68,7 +68,7 @@ class SmsClient:
     BASE_URL = "https://web.it-decision.com/ru/js"
 
     def __init__(self, login, password) -> None:
-        """Creates new instance of the SmsClient class
+        """Initializes SmsClient object
 
         Args:
             login (string): User login in the system
