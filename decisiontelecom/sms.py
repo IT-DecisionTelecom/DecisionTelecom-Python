@@ -155,9 +155,8 @@ class SmsClient:
         response = requests.get(url)
         response_body = response.text
 
-        if response.status_code < 200 or response.status_code >= 300:
-            raise Exception("Unsuccessful request, response status code: {status_code}".format(
-                status_code=response.status_code))
+        # Raise exception for unsuccessful response status codes
+        response.raise_for_status()
 
         if response_body.startswith("[\"error"):
             error_code = int(self.__get_value_from_response_content(

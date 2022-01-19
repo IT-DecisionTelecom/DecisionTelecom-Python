@@ -42,7 +42,6 @@ class TestSms(unittest.TestCase):
 
     @responses.activate
     def test_send_message_returns_unsuccessful_status_code(self):
-        expected_error_message = "Unsuccessful request, response status code: 500"
         responses.add(responses.GET,
                       "https://web.it-decision.com/ru/js/send",
                       body="Some general error text",
@@ -53,7 +52,6 @@ class TestSms(unittest.TestCase):
             self.sms_client.send_message('', '', '', True)
         except Exception as error:
             self.assertFalse(isinstance(error, SmsError))
-            self.assertEquals(expected_error_message, error.args[0])
 
     @responses.activate
     def test_send_message_returns_invalid_response(self):
@@ -118,7 +116,6 @@ class TestSms(unittest.TestCase):
 
     @responses.activate
     def test_get_message_status_returns_unsuccessful_status_code(self):
-        expected_error_message = "Unsuccessful request, response status code: 500"
         responses.add(responses.GET,
                       "https://web.it-decision.com/ru/js/state",
                       body="Some general error text",
@@ -129,7 +126,6 @@ class TestSms(unittest.TestCase):
             self.sms_client.get_message_status(124)
         except Exception as error:
             self.assertFalse(isinstance(error, SmsError))
-            self.assertEquals(expected_error_message, error.args[0])
 
     @responses.activate
     def test_get_message_status_returns_invalid_response(self):
@@ -186,7 +182,6 @@ class TestSms(unittest.TestCase):
 
     @responses.activate
     def test_get_balance_returns_unsuccessful_status_code(self):
-        expected_error_message = "Unsuccessful request, response status code: 500"
         responses.add(responses.GET,
                       "https://web.it-decision.com/ru/js/balance",
                       body="Some general error text",
@@ -197,7 +192,6 @@ class TestSms(unittest.TestCase):
             self.sms_client.get_balance()
         except Exception as error:
             self.assertFalse(isinstance(error, SmsError))
-            self.assertEquals(expected_error_message, error.args[0])
 
     @responses.activate
     def test_get_balance_returns_incorrect_json(self):
