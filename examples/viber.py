@@ -72,7 +72,7 @@ def viber_get_message_status():
               (receipt.status.value, receipt.status))
     except ViberError as viber_error:
         # ViberError contains specific DecisionTelecom error with details of what went wrong during the operation
-        print("Error while sending Viber message.")
+        print("Error while getting Viber message status.")
         print("Error name: %s" % (viber_error.name))
         print("Error message: %s" % (viber_error.message))
         print("Error code: %d" % (viber_error.code))

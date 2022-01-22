@@ -23,7 +23,7 @@ def viber_plus_sms_send_transactional_message():
         print("Message Id: %d" % (message_id))
     except ViberError as viber_error:
         # ViberError contains specific DecisionTelecom error with details of what went wrong during the operation
-        print("Error while sending Viber message.")
+        print("Error while sending Viber plus SMS message.")
         print("Error name: %s" % (viber_error.name))
         print("Error message: %s" % (viber_error.message))
         print("Error code: %d" % (viber_error.code))
@@ -47,7 +47,7 @@ def viber_plus_sms_get_message_status():
             print("SMS message status: %d (%s)" % (receipt.sms_message_status.value, receipt.sms_message_status))
     except ViberError as viber_error:
         # ViberError contains specific DecisionTelecom error with details of what went wrong during the operation
-        print("Error while sending Viber message.")
+        print("Error while getting Viber plus SMS message status.")
         print("Error name: %s" % (viber_error.name))
         print("Error message: %s" % (viber_error.message))
         print("Error code: %d" % (viber_error.code))
