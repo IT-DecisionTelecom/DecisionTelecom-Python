@@ -43,8 +43,8 @@ def viber_plus_sms_get_message_status():
         # get_message_status method should return status of the sent Viber plus SMS message
         print("Viber message status: %d (%s)" % (receipt.status.value, receipt.status))
 
-        if receipt.sms_status != None:
-            print("SMS message status: %d (%s)" % (receipt.sms_status.value, receipt.sms_status))
+        if receipt.sms_message_status != None:
+            print("SMS message status: %d (%s)" % (receipt.sms_message_status.value, receipt.sms_message_status))
     except ViberError as viber_error:
         # ViberError contains specific DecisionTelecom error with details of what went wrong during the operation
         print("Error while sending Viber message.")

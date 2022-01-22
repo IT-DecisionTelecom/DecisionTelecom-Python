@@ -39,19 +39,19 @@ class ViberPlusSmsMessage(ViberMessage):
 class ViberPlusSmsMessageReceipt(ViberMessageReceipt):
     """Represents Viber plus SMS message receipt (Id and status of the particular Viber and SMS message)"""
 
-    def __init__(self, message_id, status, sms_message_id=None, sms_status=None) -> None:
+    def __init__(self, message_id, status, sms_message_id=None, sms_message_status=None) -> None:
         """Initializes ViberPlusSmsMessageReceipt object
 
         Args:
             message_id (int): Viber message Id
             status (ViberMessageStatus): Viber message status
             sms_message_id (int, optional): SMS message Id. Defaults to None.
-            sms_status (SmsMessageStatus, optional): SMS message status. Defaults to None.
+            sms_message_status (SmsMessageStatus, optional): SMS message status. Defaults to None.
         """
         super().__init__(message_id, status)
         self.sms_message_id = sms_message_id
-        self.sms_status = None if sms_status == None else SmsMessageStatus(
-            sms_status)
+        self.sms_message_status = None if sms_message_status == None else SmsMessageStatus(
+            sms_message_status)
 
 
 class ViberPlusSmsClient(ViberClient):
