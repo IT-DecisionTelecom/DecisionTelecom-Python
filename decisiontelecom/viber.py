@@ -126,7 +126,7 @@ class ViberClient:
             ViberError: If specific Viber error occurred
         """
         def ok_response_func(response_body):
-            return json.loads(response_body)["message_id"]
+            return int(json.loads(response_body)["message_id"])
         request = message.toJSON()
         return self.__make_http_request("send-viber", request, ok_response_func)
 
