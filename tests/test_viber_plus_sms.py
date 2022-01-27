@@ -16,11 +16,10 @@ class TestViberPlusSms(unittest.TestCase):
         expected_message_id = 429
 
         responses.add(responses.POST,
-                      "https://web.it-decision.com/v1/api/send-viber",
+                      url="https://web.it-decision.com/v1/api/send-viber",
                       body="{{\"message_id\":\"{expected_message_id}\"}}".format(
                           expected_message_id=expected_message_id),
-                      status=200,
-                      match_querystring=False)
+                      status=200)
 
         message = ViberPlusSmsMessage(
             "", "", ViberMessageType.TextOnly, "", ViberMessageSourceType.Transactional, "SMS Text")
@@ -34,11 +33,10 @@ class TestViberPlusSms(unittest.TestCase):
             "Invalid Parameter: source_addr", "Empty parameter or parameter validation error", 1, 400)
 
         responses.add(responses.POST,
-                      "https://web.it-decision.com/v1/api/send-viber",
+                      url="https://web.it-decision.com/v1/api/send-viber",
                       body=json.dumps(
                           expected_error, default=lambda x: x.__dict__),
-                      status=200,
-                      match_querystring=False)
+                      status=200)
 
         try:
             message = ViberPlusSmsMessage(
@@ -54,10 +52,9 @@ class TestViberPlusSms(unittest.TestCase):
     @responses.activate
     def test_send_message_returns_unsuccessful_status_code(self):
         responses.add(responses.POST,
-                      "https://web.it-decision.com/v1/api/send-viber",
+                      url="https://web.it-decision.com/v1/api/send-viber",
                       body="Some general error",
-                      status=500,
-                      match_querystring=False)
+                      status=500)
 
         try:
             message = ViberPlusSmsMessage(
@@ -77,10 +74,9 @@ class TestViberPlusSms(unittest.TestCase):
                     "sms_message_id": expected_sms_message_id, "sms_message_status": expected_sms_status.value}
 
         responses.add(responses.POST,
-                      "https://web.it-decision.com/v1/api/receive-viber",
+                      url="https://web.it-decision.com/v1/api/receive-viber",
                       body=json.dumps(response, default=lambda x: x.__dict__),
-                      status=200,
-                      match_querystring=False)
+                      status=200)
 
         receipt = self.client.get_message_status(expected_message_id)
 
@@ -96,11 +92,10 @@ class TestViberPlusSms(unittest.TestCase):
             "Invalid Parameter: source_addr", "Empty parameter or parameter validation error", 1, 400)
 
         responses.add(responses.POST,
-                      "https://web.it-decision.com/v1/api/receive-viber",
+                      url="https://web.it-decision.com/v1/api/receive-viber",
                       body=json.dumps(
                           expected_error, default=lambda x: x.__dict__),
-                      status=200,
-                      match_querystring=False)
+                      status=200)
 
         try:
             self.client.get_message_status(234)
@@ -114,10 +109,9 @@ class TestViberPlusSms(unittest.TestCase):
     @responses.activate
     def test_get_message_status_returns_unsuccessful_status_code(self):
         responses.add(responses.POST,
-                      "https://web.it-decision.com/v1/api/receive-viber",
+                      url="https://web.it-decision.com/v1/api/receive-viber",
                       body="Some general error",
-                      status=500,
-                      match_querystring=False)
+                      status=500)
 
         try:
             self.client.get_message_status(234)
