@@ -21,7 +21,7 @@ class TestSms(unittest.TestCase):
 
         message_id = self.sms_client.send_message('', '', '', True)
 
-        self.assertEquals(expected_message_id, message_id)
+        self.assertEqual(expected_message_id, message_id)
 
     @responses.activate
     def test_send_message_returns_error_code(self):
@@ -38,7 +38,7 @@ class TestSms(unittest.TestCase):
             self.sms_client.send_message('', '', '', True)
         except Exception as error:
             self.assertTrue(isinstance(error, SmsError))
-            self.assertEquals(expected_error_code, error.error_code)
+            self.assertEqual(expected_error_code, error.error_code)
 
     @responses.activate
     def test_send_message_returns_unsuccessful_status_code(self):
@@ -66,7 +66,7 @@ class TestSms(unittest.TestCase):
             self.sms_client.send_message('', '', '', True)
         except Exception as error:
             self.assertFalse(isinstance(error, SmsError))
-            self.assertEquals(expected_error_message, error.args[0])
+            self.assertEqual(expected_error_message, error.args[0])
 
     @responses.activate
     def test_get_message_status_returns_status(self):
@@ -81,7 +81,7 @@ class TestSms(unittest.TestCase):
 
         status = self.sms_client.get_message_status(124)
 
-        self.assertEquals(expected_status, status)
+        self.assertEqual(expected_status, status)
 
     @responses.activate
     def test_get_message_status_returns_status_without_code(self):
@@ -95,7 +95,7 @@ class TestSms(unittest.TestCase):
 
         status = self.sms_client.get_message_status(124)
 
-        self.assertEquals(expected_status, status)
+        self.assertEqual(expected_status, status)
 
     @responses.activate
     def test_get_message_status_returns_error_code(self):
@@ -112,7 +112,7 @@ class TestSms(unittest.TestCase):
             self.sms_client.get_message_status(124)
         except Exception as error:
             self.assertTrue(isinstance(error, SmsError))
-            self.assertEquals(expected_error_code, error.error_code)
+            self.assertEqual(expected_error_code, error.error_code)
 
     @responses.activate
     def test_get_message_status_returns_unsuccessful_status_code(self):
@@ -140,7 +140,7 @@ class TestSms(unittest.TestCase):
             self.sms_client.get_message_status(124)
         except Exception as error:
             self.assertFalse(isinstance(error, SmsError))
-            self.assertEquals(expected_error_message, error.args[0])
+            self.assertEqual(expected_error_message, error.args[0])
 
     @responses.activate
     def test_get_balance_returns_balance_information(self):
@@ -159,9 +159,9 @@ class TestSms(unittest.TestCase):
         balance = self.sms_client.get_balance()
 
         self.assertIsNotNone(balance)
-        self.assertEquals(expected_balance, balance.balance)
-        self.assertEquals(expected_credit, balance.credit)
-        self.assertEquals(expected_currency, balance.currency)
+        self.assertEqual(expected_balance, balance.balance)
+        self.assertEqual(expected_credit, balance.credit)
+        self.assertEqual(expected_currency, balance.currency)
 
     @responses.activate
     def test_get_balance_returns_error_code(self):
@@ -178,7 +178,7 @@ class TestSms(unittest.TestCase):
             self.sms_client.get_balance()
         except Exception as error:
             self.assertTrue(isinstance(error, SmsError))
-            self.assertEquals(expected_error_code, error.error_code)
+            self.assertEqual(expected_error_code, error.error_code)
 
     @responses.activate
     def test_get_balance_returns_unsuccessful_status_code(self):

@@ -26,7 +26,7 @@ class TestViberPlusSms(unittest.TestCase):
             "", "", ViberMessageType.TextOnly, "", ViberMessageSourceType.Transactional, "SMS Text")
         message_id = self.client.send_message(message)
 
-        self.assertEquals(expected_message_id, message_id)
+        self.assertEqual(expected_message_id, message_id)
 
     @responses.activate
     def test_send_message_returns_decision_telecom_error(self):
@@ -46,10 +46,10 @@ class TestViberPlusSms(unittest.TestCase):
             self.client.send_message(message)
         except ViberError as error:
             self.assertTrue(isinstance(error, ViberError))
-            self.assertEquals(expected_error.name, error.name)
-            self.assertEquals(expected_error.message, error.message)
-            self.assertEquals(expected_error.code, error.code)
-            self.assertEquals(expected_error.status, error.status)
+            self.assertEqual(expected_error.name, error.name)
+            self.assertEqual(expected_error.message, error.message)
+            self.assertEqual(expected_error.code, error.code)
+            self.assertEqual(expected_error.status, error.status)
 
     @responses.activate
     def test_send_message_returns_unsuccessful_status_code(self):
@@ -85,10 +85,10 @@ class TestViberPlusSms(unittest.TestCase):
         receipt = self.client.get_message_status(expected_message_id)
 
         self.assertIsNotNone(receipt)
-        self.assertEquals(expected_message_id, receipt.message_id)
-        self.assertEquals(expected_status, receipt.status.value)
-        self.assertEquals(expected_sms_message_id, receipt.sms_message_id)
-        self.assertEquals(expected_sms_status, receipt.sms_message_status.value)
+        self.assertEqual(expected_message_id, receipt.message_id)
+        self.assertEqual(expected_status, receipt.status.value)
+        self.assertEqual(expected_sms_message_id, receipt.sms_message_id)
+        self.assertEqual(expected_sms_status, receipt.sms_message_status.value)
 
     @responses.activate
     def test_get_message_status_returns_decision_telecom_error(self):
@@ -106,10 +106,10 @@ class TestViberPlusSms(unittest.TestCase):
             self.client.get_message_status(234)
         except ViberError as error:
             self.assertTrue(isinstance(error, ViberError))
-            self.assertEquals(expected_error.name, error.name)
-            self.assertEquals(expected_error.message, error.message)
-            self.assertEquals(expected_error.code, error.code)
-            self.assertEquals(expected_error.status, error.status)
+            self.assertEqual(expected_error.name, error.name)
+            self.assertEqual(expected_error.message, error.message)
+            self.assertEqual(expected_error.code, error.code)
+            self.assertEqual(expected_error.status, error.status)
 
     @responses.activate
     def test_get_message_status_returns_unsuccessful_status_code(self):
